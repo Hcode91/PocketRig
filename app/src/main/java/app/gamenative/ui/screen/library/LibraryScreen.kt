@@ -682,7 +682,8 @@ private fun LibraryScreenContent(
 
     // PocketRig: "Add game" first asks whether to browse itch.io or add a folder.
     var showAddSourceChooser by remember { mutableStateOf(false) }
-    var showItchBrowser by remember { mutableStateOf(false) }
+    // null = closed; otherwise which start point the browser opens on.
+    var browserStart by remember { mutableStateOf<BrowserStart?>(null) }
     val onAddCustomGameClick = { showAddSourceChooser = true }
 
     // Handle opening folder picker (with dialog check)
@@ -1654,10 +1655,24 @@ private fun LibraryScreenContent(
                         TextButton(
                             onClick = {
                                 showAddSourceChooser = false
-                                showItchBrowser = true
+                                browserStart = BrowserStart.ITCH
                             },
                             modifier = Modifier.fillMaxWidth(),
                         ) { Text("Browse itch.io") }
+                        TextButton(
+                            onClick = {
+                                showAddSourceChooser = false
+                                browserStart = BrowserStart.ITCH_OWNED
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        ) { Text("My itch.io games") }
+                        TextButton(
+                            onClick = {
+                                showAddSourceChooser = false
+                                browserStart = BrowserStart.START_PAGE
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        ) { Text("Web browser and web games") }
                         TextButton(
                             onClick = {
                                 showAddSourceChooser = false
@@ -1676,9 +1691,11 @@ private fun LibraryScreenContent(
             )
         }
 
-        if (showItchBrowser) {
-            app.gamenative.itch.ItchBrowserDialog(
-                onDismissRequest = { showItchBrowser = false },
+        browserStart?.let { start ->
+            app.gamenative.itch.GameBrowserDialog(
+                startUrl = if (start == BrowserStart.ITCH) app.gamenative.itch.ITCH_WINDOWS_GAMES else null,
+                openOwned = start == BrowserStart.ITCH_OWNED,
+                onDismissRequest = { browserStart = null },
                 onInstalled = { folder -> onAddCustomGameFolder(folder.absolutePath) },
             )
         }
@@ -1911,3 +1928,6 @@ private fun String?.toThemePaneType(): PaneType? = when (this?.lowercase()) {
     "row" -> PaneType.ROW
     else -> null
 }
+
+/** PocketRig: where the built-in browser opens from the Add game menu. */
+private enum class BrowserStart { ITCH, ITCH_OWNED, START_PAGE }
