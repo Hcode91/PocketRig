@@ -129,6 +129,10 @@ object ContainerStorageManager {
         // html5 only: html5 never uses the wine distribution dirs, while wine containers would need them
         // restored on the next launch.
         val canReclaimWineStorage: Boolean = false,
+        /** PocketRig: whether this container sits on the shared Wine base or is a full copy. */
+        val prefixKind: ContainerSlimmer.PrefixKind = ContainerSlimmer.PrefixKind.UNKNOWN,
+        /** PocketRig: shader caches and temp files that "Clean up" would remove. */
+        val cleanableBytes: Long = 0L,
     ) {
         val combinedSizeBytes: Long?
             get() = when {
@@ -880,6 +884,8 @@ object ContainerStorageManager {
                 gameSource != null && gameSource != GameSource.CUSTOM_GAME,
             hasContainer = true,
             canReclaimWineStorage = canReclaimWineStorage,
+            prefixKind = ContainerSlimmer.prefixKind(config),
+            cleanableBytes = ContainerSlimmer.cleanableBytes(dir),
         )
     }
 
