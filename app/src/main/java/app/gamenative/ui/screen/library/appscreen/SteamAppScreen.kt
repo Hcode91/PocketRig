@@ -151,6 +151,30 @@ private fun buildNotEnoughSpaceState(context: Context, info: InstallSizeInfo): M
  * Steam-specific implementation of BaseAppScreen
  */
 class SteamAppScreen : BaseAppScreen() {
+    /** PocketRig: opens this Steam game in DroidDeck, which runs Valve's own Steam client. */
+    @Composable
+    override fun getPlayInDroidDeckOption(
+        context: Context,
+        libraryItem: LibraryItem,
+    ): AppMenuOption? {
+        val appId = libraryItem.gameId
+        if (appId <= 0) return null
+        val intent = app.gamenative.utils.DroidDeckLink.intentFor(appId)
+        if (!app.gamenative.utils.DroidDeckLink.isInstalled(context)) return null
+        return AppMenuOption(
+            optionType = AppOptionMenuType.PlayInDroidDeck,
+            onClick = {
+                try {
+                    context.startActivity(intent)
+                } catch (e: Exception) {
+                    app.gamenative.ui.util.SnackbarManager.show(
+                        context.getString(R.string.pocketrig_droiddeck_failed),
+                    )
+                }
+            },
+        )
+    }
+
     companion object {
         // Shared state for uninstall dialog - list of appIds that should show the dialog
         private val uninstallDialogAppIds = mutableStateListOf<String>()

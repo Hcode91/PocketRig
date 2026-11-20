@@ -333,6 +333,7 @@ private fun getIconForOption(type: AppOptionMenuType): ImageVector {
         AppOptionMenuType.ExportFrontend -> Icons.Default.Share
         AppOptionMenuType.CopyLaunchLink -> Icons.Default.Link
         AppOptionMenuType.PlayOnGeForceNow -> Icons.AutoMirrored.Filled.OpenInNew
+        AppOptionMenuType.PlayInDroidDeck -> Icons.AutoMirrored.Filled.OpenInNew
         AppOptionMenuType.RunContainer -> Icons.Default.PlayArrow
         AppOptionMenuType.EditContainer -> Icons.Default.Settings
         AppOptionMenuType.ResetToDefaults -> Icons.Default.RestartAlt
@@ -388,6 +389,7 @@ private fun groupOptions(options: List<AppMenuOption>): Map<OptionCategory, List
             AppOptionMenuType.ExportFrontend,
             AppOptionMenuType.CopyLaunchLink,
             AppOptionMenuType.PlayOnGeForceNow,
+            AppOptionMenuType.PlayInDroidDeck,
             AppOptionMenuType.AddToFavorites,
             AppOptionMenuType.RemoveFromFavorites,
             -> quickActions.add(option)

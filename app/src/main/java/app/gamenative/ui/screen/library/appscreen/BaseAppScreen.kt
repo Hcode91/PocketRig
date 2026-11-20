@@ -614,6 +614,16 @@ abstract class BaseAppScreen {
      * full screen and your GeForce NOW login all work), with the game's name copied ready to
      * paste into its search. Subclasses can return null to hide it.
      */
+    /**
+     * PocketRig: "Play in DroidDeck" (DroidDeck runs Valve's real Steam client). Only Steam games
+     * offer it, and only when DroidDeck is installed; see SteamAppScreen.
+     */
+    @Composable
+    protected open fun getPlayInDroidDeckOption(
+        context: Context,
+        libraryItem: LibraryItem,
+    ): AppMenuOption? = null
+
     @Composable
     protected open fun getPlayOnGeForceNowOption(
         context: Context,
@@ -1263,6 +1273,7 @@ abstract class BaseAppScreen {
             menuOptions.add(getFavoriteOption(libraryItem))
         }
         getPlayOnGeForceNowOption(context, libraryItem)?.let { menuOptions.add(it) }
+        getPlayInDroidDeckOption(context, libraryItem)?.let { menuOptions.add(it) }
         menuOptions.add(getSubmitFeedbackOption(context, libraryItem))
         menuOptions.add(getGetSupportOption(context))
 
